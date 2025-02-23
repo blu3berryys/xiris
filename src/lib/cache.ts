@@ -125,7 +125,10 @@ async function refreshCache() {
 
 	const data = await response.json();
 	if (!Array.isArray(data) || data.length === 0) {
-		console.warn('No releases found from GitHub');
+		error(404, {
+			code: 'github_no_releases',
+			message: `No releases found on GitHub`
+		} as ErrorResponse);
 		return;
 	}
 
