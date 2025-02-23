@@ -47,7 +47,16 @@
 	.markdown-content code {
 		@apply text-sm rounded-xl !bg-background-100 shadow-sm;
 	}
+	.markdown-content strong {
+		@apply font-semibold;
+	}
 	.markdown-content a {
 		@apply inline-block;
+	}
+	.markdown-content ul {
+		@apply list-disc ;
+	}
+	.markdown-content p {
+		@apply my-4
 	}
 }
