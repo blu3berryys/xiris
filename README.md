@@ -9,7 +9,7 @@ Xiris is an update server for electron based applications. It's a SvelteKit repl
 ## Configuration
 
 You can configure the server by creating a `.env` file in the root of the project. The following environment variables are available:
-
+- `APP_URL`: The url of your server. Going to be used for generating RELEASES files. (Required)
 - `PORT`: The port the server will listen on. Defaults to `3000`.
 - `GITHUB_REPO`: The GitHub repository to use for the update server. (Required)
 - `GITHUB_TOKEN`: If you're using a private repository, you need to provide a GitHub token.

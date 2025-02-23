@@ -8,6 +8,7 @@ export const load = async ({ request }) => {
 		name: ua.os.name,
 		version: ua.os.version
 	};
+	console.log(os);
 	const data = await loadCache();
 	if (!data.latest) {
 		error(500, {

@@ -8,6 +8,7 @@
 	import Tag from '$components/Tag.svelte';
 	import { onMount } from 'svelte';
 	import * as m from '$lib/paraglide/messages.js';
+	import { page } from '$app/state';
 
 	let { data }: PageProps = $props();
 
@@ -35,6 +36,7 @@
 		};
 		dropdownItems.push(item);
 	});
+	console.log(page.data)
 	onMount(() => {
 		anime({
 			targets: '.animate',

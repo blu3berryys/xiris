@@ -3,6 +3,7 @@ import ms, { type StringValue } from 'ms';
 import retry from 'async-retry';
 import { checkPlatform } from './aliases';
 import {
+	APP_URL,
 	GITHUB_REPO,
 	GITHUB_TOKEN,
 	GITHUB_PRE_UPDATE,
@@ -42,11 +43,11 @@ async function cacheReleaseList(url: string): Promise<string> {
 	if (!matches || matches.length === 0) {
 		throw new Error("RELEASES content doesn't contain nupkg");
 	}
-	for (const match of matches) {
-		const nuPKG = url.replace('RELEASES', match);
-		content = content.replace(match, nuPKG);
-	}
-	return content;
+	content = content.replace(
+		matches[0],
+		`${APP_URL}/download/latest/${matches[0]}`
+	)
+	return content
 }
 
 // Transform a GitHub release into our desired structure.
@@ -73,6 +74,14 @@ async function transformRelease(release: any): Promise<any> {
 				} as ErrorResponse);
 			}
 			continue;
+		} else {
+			transformed.files[name] = {
+				name,
+				api_url: apiUrl,
+				url: browser_download_url,
+				content_type,
+				size: Math.round((size / 1000000) * 10) / 10,
+			};
 		}
 		const platform = checkPlatform(name);
 		if (!platform) {
@@ -84,7 +93,7 @@ async function transformRelease(release: any): Promise<any> {
 			api_url: apiUrl,
 			url: browser_download_url,
 			content_type,
-			size: Math.round((size / 1000000) * 10) / 10
+			size: Math.round((size / 1000000) * 10) / 10,
 		};
 	}
 
@@ -146,7 +155,7 @@ async function refreshCache() {
 		timestamp: Date.now()
 	};
 
-    await db.delete('cache');
+	await db.delete('cache');
 	await db.set('cache', cacheData);
 	return cacheData;
 }
