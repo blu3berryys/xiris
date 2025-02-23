@@ -5,11 +5,11 @@
 	import Button from '$components/Button.svelte';
 	import anime from 'animejs';
 	import Select from '$components/Select.svelte';
+	import Tag from '$components/Tag.svelte';
 	import { onMount } from 'svelte';
 	import * as m from '$lib/paraglide/messages.js';
 
 	let { data }: PageProps = $props();
-	console.log(data);
 
 	/*{"releases":[{"version":"v1.0.0-alpha","notes":"","pub_date":"2025-02-21T15:49:01Z","platforms":{"exe":{"name":"hazel-demo-electron-1.0.0.Setup.exe","api_url":"https://api.github.com/repos/Kax675/hazel-demo-electron/releases/assets/231328073","url":"https://github.com/Kax675/hazel-demo-electron/releases/download/v1.0.0-alpha/hazel-demo-electron-1.0.0.Setup.exe","content_type":"application/x-msdos-program","size":113.4}},"files":{"RELEASES":"E364FF3841E9D06DFBE04FA025879BF104E12DC4 https://github.com/Kax675/hazel-demo-electron/releases/download/v1.0.0-alpha/hazel_demo_electron-1.0.0-full.nupkg 112573443"}},{"version":"v0.0.9","notes":"# allah muhammed","pub_date":"2025-02-22T07:13:50Z","platforms":{},"files":{}}],"latest":{"version":"v1.0.0-alpha","notes":"","pub_date":"2025-02-21T15:49:01Z","platforms":{"exe":{"name":"hazel-demo-electron-1.0.0.Setup.exe","api_url":"https://api.github.com/repos/Kax675/hazel-demo-electron/releases/assets/231328073","url":"https://github.com/Kax675/hazel-demo-electron/releases/download/v1.0.0-alpha/hazel-demo-electron-1.0.0.Setup.exe","content_type":"application/x-msdos-program","size":113.4}},"files":{"RELEASES":"E364FF3841E9D06DFBE04FA025879BF104E12DC4 https://github.com/Kax675/hazel-demo-electron/releases/download/v1.0.0-alpha/hazel_demo_electron-1.0.0-full.nupkg 112573443"}},"timestamp":1740223670488}
 	 */
@@ -94,11 +94,7 @@
 				{data.cache.latest.version}
 			</span>
 			{#if data.cache.latest.prerelease}
-				<span
-					class="text-sm font-semibold bg-amber-200 text-amber-900 px-3 py-1 rounded-full animate"
-				>
-					{m.prerelease()}
-				</span>
+				<Tag class="bg-amber-200 text-amber-900 animate">{m.prerelease()}</Tag>
 			{/if}
 		</div>
 	</div>

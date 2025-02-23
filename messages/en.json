@@ -10,5 +10,6 @@
 	"home": "Home",
 	"changelog": "Changelog",
 	"releases": "Releases",
-	"footer": "Using xiris {version} by OpenAnime Labs. ©{date}"
+	"footer": "xiris {version} developed by OpenAnime Labs. ©{date}",
+	"latest_version": "Latest version"
 }

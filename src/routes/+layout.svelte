@@ -40,9 +40,15 @@
 	];
 
 	const activeRouteStyle = ' !text-gray-1000 !font-semibold bg-gray-200';
+	let version = $state('');
 
 	onMount(() => {
 		loaded = true;
+		fetch('/version')
+			.then((response) => response.text())
+			.then((data) => {
+				version = data;
+			});
 	});
 </script>
 
@@ -74,7 +80,9 @@
 						</a>
 					{/each}
 				</div>
-				<span class="text-sm text-gray-800">{m.footer({ date: new Date().getFullYear() })} </span>
+				<span class="text-sm text-gray-800"
+					>{m.footer({ date: new Date().getFullYear(), version })}
+				</span>
 			</footer>
 		</div>
 	{:else}{/if}

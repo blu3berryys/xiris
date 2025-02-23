@@ -10,5 +10,6 @@
 	"home": "Startseite",
 	"changelog": "Änderungsprotokoll",
 	"releases": "Veröffentlichungen",
-	"footer": "xiris {version} wird von OpenAnime Labs verwendet. ©{date}"
+	"footer": "xiris {version} entwickelt von OpenAnime Labs. ©{date}",
+	"latest_version": "Neueste Version"
 }

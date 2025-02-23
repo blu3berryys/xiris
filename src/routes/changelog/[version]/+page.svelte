@@ -11,6 +11,7 @@
 	import * as m from '$lib/paraglide/messages.js';
 	import 'highlight.js/styles/stackoverflow-light.css';
 	import { languageTag } from '$lib/paraglide/runtime.js';
+	import Tag from '$components/Tag.svelte';
 
 	let { data } = $props();
 
@@ -43,26 +44,36 @@
 			>
 				{release.version}
 				{#if release.prerelease}
-					<span class="text-xs font-semibold bg-amber-200 text-amber-900 px-3 py-1 rounded-full">
-						{m.prerelease()}
-					</span>
+					<Tag class="bg-amber-200 text-amber-900 !text-xs">{m.prerelease()}</Tag>
 				{/if}
 			</Button.Root>
 		{/each}
 	</aside>
-	<div>
-		<div class="markdown-content">
+	<div class="flex-1">
+		<div class="flex flex-col gap-2">
+			<h1 class="font-semibold text-5xl">{data.current.version}</h1>
+
+			<span class="text-sm font-medium text-gray-900">
+				{new Date(data.current.pub_date).toLocaleDateString(languageTag(), {
+					month: 'long',
+					day: 'numeric',
+					year: 'numeric'
+				})}
+			</span>
+
+			<div class="flex gap-2">
+				{#if data.current.version === data.cache.latest.version}
+					<Tag class="bg-blue-200 text-blue-900 !text-xs">
+						{m.latest_version()}
+					</Tag>
+				{/if}
+				{#if data.current.prerelease}
+					<Tag class="bg-amber-200 text-amber-900 !text-xs">{m.prerelease()}</Tag>
+				{/if}
+			</div>
+		</div>
+		<div class="markdown-content mt-8">
 			<Markdown md={data.current.notes} {plugins} />
 		</div>
-	</div>
-	<div class="flex flex-col items-end text-right">
-		<h1 class="font-bold text-4xl">{data.current.version}</h1>
-		<span class="text-sm font-medium text-gray-900">
-			{new Date(data.current.pub_date).toLocaleDateString(languageTag(), {
-				month: 'long',
-				day: 'numeric',
-				year: 'numeric'
-			})}
-		</span>
 	</div>
 </div>

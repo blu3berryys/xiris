@@ -10,8 +10,9 @@ import {
 	REFRESH_INTERVAL
 } from '$env/static/private';
 import { prerelease } from 'semver';
+import { error } from '@sveltejs/kit';
 
-const db = new QuickDB({ filePath: './cache/cache.sqlite' });
+const db = new QuickDB({ filePath: './cache.sqlite' });
 
 // Process the "RELEASES" asset by replacing .nupkg entries with full URLs.
 async function cacheReleaseList(url: string): Promise<string> {
@@ -24,11 +25,14 @@ async function cacheReleaseList(url: string): Promise<string> {
 		async () => {
 			const res = await fetch(url, { headers });
 			if (!res.ok) {
-				throw new Error(`Failed to fetch ${url}, status ${res.status}`);
+				error(500, {
+					code: 'github_api_error',
+					message: `GitHub API responded with ${res.status} for url ${url}`
+				});
 			}
 			return res;
 		},
-		{ retries: 3 }
+		{ retries: 2 }
 	);
 
 	let content = await response.text();
@@ -95,11 +99,14 @@ async function refreshCache() {
 		async () => {
 			const res = await fetch(url, { headers });
 			if (!res.ok) {
-				throw new Error(`GitHub API responded with ${res.status} for url ${url}`);
+				error(500, {
+					code: 'github_api_error',
+					message: `GitHub API responded with ${res.status} for url ${url}`
+				});
 			}
 			return res;
 		},
-		{ retries: 3 }
+		{ retries: 2 }
 	);
 
 	const data = await response.json();
@@ -134,6 +141,7 @@ async function refreshCache() {
 		timestamp: Date.now()
 	};
 
+    await db.delete('cache');
 	await db.set('cache', cacheData);
 	return cacheData;
 }
