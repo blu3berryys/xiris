@@ -6,8 +6,8 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview --port 3000",
-		"start": "vite build && vite preview --port 3000",
+		"preview": "vite preview --port 3000 --host",
+		"start": "vite build && vite preview --port 3000 --host",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
