@@ -1,4 +1,14 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from tr!"
+	"app_name": "OpenAnime",
+	"landing_desc": "Anime izleme deneyimi, sadeleştirilmiş.",
+	"download_for": "{platform} için indir",
+	"download": "İndir",
+	"select_platform": "Bir platform seçin",
+	"select_another_platform": "Başka bir platform seçin",
+	"prerelease": "Ön sürüm",
+	"home": "Ana sayfa",
+	"changelog": "Değişiklikler",
+	"releases": "Sürümler",
+	"footer": "xiris {version} sürümü OpenAnime Labs tarafından kullanılıyor. ©{date}"
 }

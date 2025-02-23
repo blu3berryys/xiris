@@ -2,7 +2,13 @@ import { QuickDB } from 'quick.db';
 import ms, { type StringValue } from 'ms';
 import retry from 'async-retry';
 import { checkPlatform } from './aliases';
-import { GITHUB_REPO, GITHUB_TOKEN, GITHUB_PRE_UPDATE, GITHUB_PRE_RELEASES, REFRESH_INTERVAL } from '$env/static/private';
+import {
+	GITHUB_REPO,
+	GITHUB_TOKEN,
+	GITHUB_PRE_UPDATE,
+	GITHUB_PRE_RELEASES,
+	REFRESH_INTERVAL
+} from '$env/static/private';
 import { prerelease } from 'semver';
 
 const db = new QuickDB({ filePath: './cache/cache.sqlite' });
@@ -14,13 +20,16 @@ async function cacheReleaseList(url: string): Promise<string> {
 		headers.Authorization = `token ${GITHUB_TOKEN}`;
 	}
 
-	const response = await retry(async () => {
-		const res = await fetch(url, { headers });
-		if (!res.ok) {
-			throw new Error(`Failed to fetch ${url}, status ${res.status}`);
-		}
-		return res;
-	}, { retries: 3 });
+	const response = await retry(
+		async () => {
+			const res = await fetch(url, { headers });
+			if (!res.ok) {
+				throw new Error(`Failed to fetch ${url}, status ${res.status}`);
+			}
+			return res;
+		},
+		{ retries: 3 }
+	);
 
 	let content = await response.text();
 	const matches = content.match(/[^ ]*\.nupkg/gim);
@@ -52,7 +61,7 @@ async function transformRelease(release: any): Promise<any> {
 				const releasesContent = await cacheReleaseList(browser_download_url);
 				transformed.files['RELEASES'] = releasesContent;
 			} catch (err) {
-				console.error("Error caching RELEASES file", err);
+				console.error('Error caching RELEASES file', err);
 			}
 			continue;
 		}
@@ -82,13 +91,16 @@ async function refreshCache() {
 		headers.Authorization = `token ${GITHUB_TOKEN}`;
 	}
 
-	const response = await retry(async () => {
-		const res = await fetch(url, { headers });
-		if (!res.ok) {
-			throw new Error(`GitHub API responded with ${res.status} for url ${url}`);
-		}
-		return res;
-	}, { retries: 3 });
+	const response = await retry(
+		async () => {
+			const res = await fetch(url, { headers });
+			if (!res.ok) {
+				throw new Error(`GitHub API responded with ${res.status} for url ${url}`);
+			}
+			return res;
+		},
+		{ retries: 3 }
+	);
 
 	const data = await response.json();
 	if (!Array.isArray(data) || data.length === 0) {
@@ -101,34 +113,41 @@ async function refreshCache() {
 	const includePreAll = GITHUB_PRE_RELEASES === 'true';
 
 	// Filter for the latest release using includePreLatest.
-	const filteredLatest = data.filter((item: any) => !item.draft && (includePreLatest ? true : !item.prerelease));
-	const transformedLatest = filteredLatest.length > 0 ? await transformRelease(filteredLatest[0]) : null;
+	const filteredLatest = data.filter(
+		(item: any) => !item.draft && (includePreLatest ? true : !item.prerelease)
+	);
+	const transformedLatest =
+		filteredLatest.length > 0 ? await transformRelease(filteredLatest[0]) : null;
 
 	// Filter for all valid releases using includePreAll.
-	const filteredAll = data.filter((item: any) => !item.draft && (includePreAll ? true : !item.prerelease));
-	const transformedAll = await Promise.all(filteredAll.map(async (release: any) => await transformRelease(release)));
+	const filteredAll = data.filter(
+		(item: any) => !item.draft && (includePreAll ? true : !item.prerelease)
+	);
+	const transformedAll = await Promise.all(
+		filteredAll.map(async (release: any) => await transformRelease(release))
+	);
 
 	const cacheData = {
-		releases: transformedAll,       // Array of transformed release objects.
-		latest: transformedLatest,        // The latest transformed release.
-		raw: data,                        // The original GitHub API response.
+		releases: transformedAll, // Array of transformed release objects.
+		latest: transformedLatest, // The latest transformed release.
+		raw: data, // The original GitHub API response.
 		timestamp: Date.now()
 	};
 
-	await db.set("cache", cacheData);
+	await db.set('cache', cacheData);
 	return cacheData;
 }
 
 // Public function to load the cache: refresh if outdated, otherwise return cached data.
 export async function loadCache() {
-	const cached = await db.get("cache");
-	const interval = REFRESH_INTERVAL || "1m";
+	const cached = await db.get('cache');
+	const interval = REFRESH_INTERVAL || '1m';
 
 	if (!cached || !cached.timestamp || Date.now() - cached.timestamp > ms(interval as StringValue)) {
-		console.log("Refreshing cache");
+		console.log('Refreshing cache');
 		return await refreshCache();
 	} else {
-		console.log("Using cache");
+		console.log('Using cache');
 		return cached;
 	}
 }

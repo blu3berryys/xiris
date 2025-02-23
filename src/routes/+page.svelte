@@ -6,6 +6,7 @@
 	import anime from 'animejs';
 	import Select from '$components/Select.svelte';
 	import { onMount } from 'svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { data }: PageProps = $props();
 	console.log(data);
@@ -41,9 +42,9 @@
 			translateY: [-20, 0],
 			opacity: [0, 1],
 			delay: anime.stagger(100),
-			easing: "easeOutExpo"
+			easing: 'easeOutExpo'
 		});
-		anime
+		anime;
 	});
 </script>
 
@@ -54,27 +55,34 @@
 		>
 			<img src="/favicon512.png" alt="Logo" />
 		</div>
-		<h1 class="font-semibold text-5xl animate">OpenAnime</h1>
-		<span class="text-sm text-gray-800 animate">Anime viewing experience, streamlined.</span>
+		<h1 class="font-semibold text-5xl animate">{m.app_name()}</h1>
+		<span class="text-sm text-gray-900 animate">{m.landing_desc()}</span>
 		<div class="flex gap-2 w-full animate">
 			{#if available}
 				<div class="flex flex-col gap-2">
-					<Button href="/download" class="!pr-4" type="accent" rounded
-						>Download for {data.os.name}<Icon
+					<Button href="/download" class="!pr-4" type="accent" rounded data-no-translate
+						>{m.download_for({ platform: data.os.name })}<Icon
 							icon="tabler:arrow-narrow-right"
 							class="ml-2 size-6"
 						/></Button
 					>
-					<a class="text-sm" onclick={() => (available = false)}>Select another platform</a>
+					<a class="text-sm focusable select-none" href="#" onclick={() => (available = false)}
+						>{m.select_another_platform()}</a
+					>
 				</div>
 			{:else}
 				<Select
 					bind:value={selectedPlatform}
-					placeholder="Select a platform..."
+					placeholder={m.select_platform()}
 					items={dropdownItems}
 				/>
-				<Button class="!pr-4" href="/download/{selectedPlatform}" type="accent" rounded
-					>Download <Icon icon="tabler:arrow-narrow-right" class="ml-2 size-6" /></Button
+				<Button
+					class="!pr-4"
+					href="/download/{selectedPlatform}"
+					data-no-translate
+					type="accent"
+					rounded
+					>{m.download()} <Icon icon="tabler:arrow-narrow-right" class="ml-2 size-6" /></Button
 				>
 			{/if}
 		</div>
@@ -86,8 +94,10 @@
 				{data.cache.latest.version}
 			</span>
 			{#if data.cache.latest.prerelease}
-				<span class="text-sm font-semibold bg-amber-200 text-amber-900 px-3 py-1 rounded-full animate">
-					Pre-release
+				<span
+					class="text-sm font-semibold bg-amber-200 text-amber-900 px-3 py-1 rounded-full animate"
+				>
+					{m.prerelease()}
 				</span>
 			{/if}
 		</div>
@@ -96,7 +106,7 @@
 		<div>
 			<img
 				src="/app-light.png"
-				class="rounded-xl shadow-2xl translate-x-40 hover:translate-x-10 transition-transform duration-500 ease-in-out"
+				class="rounded-xl shadow-2xl translate-x-40 hover:translate-x-10 transition-transform duration-500 ease-in-out select-none"
 			/>
 		</div>
 	</div>

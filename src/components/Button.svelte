@@ -5,7 +5,7 @@
 	let { rounded = false, type = 'accent', class: className, children, ...restProps } = $props();
 
 	const button = tv({
-		base: 'flex items-center justify-between font-medium px-8 py-2 rounded-xl active:scale-95 hover:scale-102 active:opacity-80 transition-all',
+		base: 'flex items-center justify-between font-medium px-8 py-2 rounded-xl active:scale-95 hover:scale-102 active:opacity-80 transition-all focusable select-none',
 		variants: {
 			type: {
 				accent: 'bg-pink-700 hover:bg-pink-800 text-white',

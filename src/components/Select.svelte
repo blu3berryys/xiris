@@ -1,12 +1,10 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { Select } from 'bits-ui';
-    import { expoOut } from 'svelte/easing';
-    import { fly } from 'svelte/transition';
+	import { expoOut } from 'svelte/easing';
+	import { fly } from 'svelte/transition';
 	let { items, placeholder, value = $bindable() } = $props();
 
-
-	
 	const selectedLabel = $derived(
 		value ? items.find((item) => item.value === value)?.label : placeholder
 	);
@@ -14,7 +12,7 @@
 
 <Select.Root type="single" onValueChange={(v) => (value = v)}>
 	<Select.Trigger
-		class="font-medium px-5 py-2 w-50 inline-flex justify-between select-none items-center bg-gray-100 hover:bg-gray-200 data-placeholder:text-gray-alpha-800 text-sm transition-all rounded-lg"
+		class="font-medium px-5 py-2 w-50 inline-flex justify-between select-none items-center bg-gray-100 hover:bg-gray-200 data-placeholder:text-gray-alpha-800 text-sm transition-all rounded-lg focusable"
 		aria-label={placeholder}
 	>
 		{selectedLabel}
@@ -29,7 +27,7 @@
 			{#snippet child({ wrapperProps, props, open })}
 				{#if open}
 					<div {...wrapperProps}>
-						<div {...props} transition:fly={{duration: 300, easing: expoOut, y: 10}}>
+						<div {...props} transition:fly={{ duration: 300, easing: expoOut, y: 10 }}>
 							<Select.ScrollUpButton class="flex w-full items-center justify-center">
 								<Icon icon="tabler:chevrons-up" class="size-3" />
 							</Select.ScrollUpButton>

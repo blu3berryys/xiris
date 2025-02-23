@@ -1,0 +1,14 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"app_name": "OpenAnime",
+	"landing_desc": "洗練されたアニメ視聴体験。",
+	"download_for": "{platform}向けのダウンロード",
+	"download": "ダウンロード",
+	"select_platform": "プラットフォームを選択",
+	"select_another_platform": "別のプラットフォームを選択",
+	"prerelease": "プレリリース",
+	"home": "ホーム",
+	"changelog": "変更履歴",
+	"releases": "リリース",
+	"footer": "OpenAnime Labs による xiris {version} を使用中。©{date}"
+}
