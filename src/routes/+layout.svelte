@@ -29,7 +29,6 @@
 			{ href: '/', name: m.home(), route: '/' },
 			{ href: '/changelog', name: m.changelog(), route: '/changelog/[version]' }
 		];
-		console.log('update');
 	});
 
 	const languages = [

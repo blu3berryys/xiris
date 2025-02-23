@@ -32,6 +32,6 @@ export const GET: RequestHandler = async ({ request, url }) => {
 			message: 'No assets found for this platform'
 		} as ErrorResponse);
 	}
-	console.log(latest.platforms[platform]);
+	console.log("Latest platform", latest.platforms[platform]);
 	return downloadAsset(latest.platforms[platform]);
 };

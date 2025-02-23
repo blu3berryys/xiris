@@ -4,18 +4,21 @@ import { error, redirect } from '@sveltejs/kit';
 
 export async function downloadAsset(asset: Asset) {
 	const shouldUseProxyDownload =
-		GITHUB_TOKEN && typeof GITHUB_TOKEN === 'string' && GITHUB_TOKEN.length > 0;
+		GITHUB_TOKEN && GITHUB_TOKEN.length > 0;
 
 	if (shouldUseProxyDownload) {
-		const url = asset.url.replace(
-			'https://api.github.com/',
-			`https://${GITHUB_TOKEN}@api.github.com/`
-		);
-		const res = await fetch(url);
+		console.log('Using proxy download')
+
+		const res = await fetch(asset.api_url, {
+			headers: {
+				Accept: 'application/octet-stream',
+				Authorization: `Bearer ${GITHUB_TOKEN}`
+			}
+		});
 		if (!res.ok) {
 			return error(500, {
 				code: 'download_failed',
-				message: 'Failed to download asset'
+				message: `Download failed: ${res.status} ${res.statusText}`
 			} as ErrorResponse);
 		}
 		const contentType = res.headers.get('content-type') || 'application/octet-stream';

@@ -11,14 +11,16 @@ import {
 } from '$env/static/private';
 import { prerelease } from 'semver';
 import { error } from '@sveltejs/kit';
+import type { ErrorResponse } from './types';
 
 const db = new QuickDB({ filePath: './cache.sqlite' });
 
 // Process the "RELEASES" asset by replacing .nupkg entries with full URLs.
 async function cacheReleaseList(url: string): Promise<string> {
-	const headers: any = { Accept: 'application/vnd.github.preview' };
+	console.log(url)
+	const headers: any = { Accept: 'application/octet-stream' };
 	if (GITHUB_TOKEN && GITHUB_TOKEN.length > 0) {
-		headers.Authorization = `token ${GITHUB_TOKEN}`;
+		headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
 	}
 
 	const response = await retry(
@@ -28,7 +30,7 @@ async function cacheReleaseList(url: string): Promise<string> {
 				error(500, {
 					code: 'github_api_error',
 					message: `GitHub API responded with ${res.status} for url ${url}`
-				});
+				} as ErrorResponse);
 			}
 			return res;
 		},
@@ -62,10 +64,13 @@ async function transformRelease(release: any): Promise<any> {
 		const { name, browser_download_url, url: apiUrl, content_type, size } = asset;
 		if (name === 'RELEASES') {
 			try {
-				const releasesContent = await cacheReleaseList(browser_download_url);
+				const releasesContent = await cacheReleaseList(apiUrl);
 				transformed.files['RELEASES'] = releasesContent;
 			} catch (err) {
-				console.error('Error caching RELEASES file', err);
+				error(500, {
+					code: 'error_caching',
+					message: `Error caching RELEASES for release ${release.tag_name}`
+				} as ErrorResponse);
 			}
 			continue;
 		}
@@ -92,7 +97,7 @@ async function refreshCache() {
 	const url = `https://api.github.com/repos/${repo}/releases?per_page=100`;
 	const headers: any = { Accept: 'application/vnd.github.preview' };
 	if (GITHUB_TOKEN && GITHUB_TOKEN.length > 0) {
-		headers.Authorization = `token ${GITHUB_TOKEN}`;
+		headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
 	}
 
 	const response = await retry(
@@ -102,7 +107,7 @@ async function refreshCache() {
 				error(500, {
 					code: 'github_api_error',
 					message: `GitHub API responded with ${res.status} for url ${url}`
-				});
+				} as ErrorResponse);
 			}
 			return res;
 		},
