@@ -3,5 +3,9 @@ import { loadCache } from '$lib/cache';
 export async function GET() {
 	const cache = await loadCache();
 
-	return text(cache.latest.files.RELEASES);
+	return text(cache.latest.files.RELEASES, {
+		headers: {
+			'Cache-Control': 'public, max-age=60'
+		}
+	});
 }
